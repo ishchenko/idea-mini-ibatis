@@ -1,0 +1,17 @@
+<idea-plugin version="2" url="https://github.com/ishchenko/idea-mini-ibatis">
+
+    <name>idea-mini-ibatis</name>
+    <description>Simple iBatis/MyBatis plugin</description>
+    <version>0.1</version>
+    <vendor>Max Ishchenko</vendor>
+    <idea-version since-build="107.500"/>
+
+    <extensions defaultExtensionNs="com.intellij">
+
+        <psi.referenceContributor implementation="net.ishchenko.idea.minibatis.MyBatisReferenceContributor"/>
+        <projectService serviceImplementation="net.ishchenko.idea.minibatis.SqlMapModelFactory"/>
+        <dom.fileDescription implementation="net.ishchenko.idea.minibatis.SqlMapDescription"/>
+
+    </extensions>
+
+</idea-plugin>
