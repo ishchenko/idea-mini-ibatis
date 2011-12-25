@@ -7,6 +7,6 @@ This plugin is not in official repo yet, has to be tested in large project first
 
 # Features
 
-# Supports multiple sqlmap configurations per module. In fact it does not even bother with configurations (yet), only sqlmap files matter.
-# "Go to Declaration" for literal expressions inside any method parameters, e.g. inside spring's SqlMapClientOperations#queryForObject parameters etc.
-# Autocompletion inside any literal expressions
+* Supports multiple sqlmap configurations per module. In fact it does not even bother with configurations (yet), only sqlmap files matter.
+* "Go to Declaration" for literal expressions inside any method parameters, e.g. inside spring's SqlMapClientOperations#queryForObject parameters etc.
+* Autocompletion inside any literal expressions
