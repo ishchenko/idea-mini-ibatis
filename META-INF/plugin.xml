@@ -9,7 +9,6 @@
     <extensions defaultExtensionNs="com.intellij">
 
         <psi.referenceContributor implementation="net.ishchenko.idea.minibatis.MyBatisReferenceContributor"/>
-        <projectService serviceImplementation="net.ishchenko.idea.minibatis.SqlMapModelFactory"/>
         <dom.fileDescription implementation="net.ishchenko.idea.minibatis.SqlMapDescription"/>
 
     </extensions>
