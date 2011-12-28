@@ -1,10 +1,30 @@
 <idea-plugin version="2" url="https://github.com/ishchenko/idea-mini-ibatis">
 
-    <name>idea-mini-ibatis</name>
-    <description>Simple iBatis/MyBatis plugin</description>
+    <id>idea-mini-ibatis</id>
+    <name>iBatis/MyBatis mini-plugin</name>
     <version>1.0</version>
     <vendor>Max Ishchenko</vendor>
     <idea-version since-build="103.255"/>
+
+    <description><![CDATA[
+    <html>
+        Simple iBatis/MyBatis plugin <br>
+        Contains essential features only, no datasource integration (yet). Simply scans your
+        source roots and finds all sqlMap files, provide Go to Declaration from java string literals
+        and statement name completion. <br>
+        Works for IDEA >= 10.0.3
+    </html>
+    ]]>
+    </description>
+
+    <change-notes>
+        <![CDATA[
+        <ul> Initial version
+            <li>Go to Declaration for string literals in method arguments</li>
+            <li>Autocompletion of statement names in string literals in method arguments</li>
+        </ul>
+        ]]>
+    </change-notes>
 
     <extensions defaultExtensionNs="com.intellij">
 
