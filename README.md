@@ -1,4 +1,4 @@
-Small IntelliJ IDEA iBatis/MyBatis plugin.
+Small IntelliJ IDEA iBatis/MyBatis plugin. http://plugins.intellij.net/plugin/?idea&id=6725
 
 # Overview
 
