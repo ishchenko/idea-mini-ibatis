@@ -2,9 +2,9 @@
 
     <name>idea-mini-ibatis</name>
     <description>Simple iBatis/MyBatis plugin</description>
-    <version>0.1</version>
+    <version>1.0</version>
     <vendor>Max Ishchenko</vendor>
-    <idea-version since-build="107.500"/>
+    <idea-version since-build="103.255"/>
 
     <extensions defaultExtensionNs="com.intellij">
 
