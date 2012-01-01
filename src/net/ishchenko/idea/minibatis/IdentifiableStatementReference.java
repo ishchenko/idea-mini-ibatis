@@ -1,12 +1,11 @@
 package net.ishchenko.idea.minibatis;
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiLiteralExpression;
 import com.intellij.psi.PsiReferenceBase;
-import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.xml.DomFileElement;
-import com.intellij.util.xml.DomService;
 import net.ishchenko.idea.minibatis.model.IdentifiableStatement;
 import net.ishchenko.idea.minibatis.model.SqlMap;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +37,7 @@ public class IdentifiableStatementReference extends PsiReferenceBase<PsiLiteralE
         String namespace = parts[0];
         String id = parts[1];
 
-        for (DomFileElement<SqlMap> fileElement : findSqlMapFileElements()) {
+        for (DomFileElement<SqlMap> fileElement : ServiceManager.getService(getElement().getProject(), DomFileElementsFinder.class).findSqlMapFileElements()) {
             SqlMap sqlMap = fileElement.getRootElement();
             if (namespace.equals(sqlMap.getNamespace().getRawText())) {
                 for (IdentifiableStatement statement : sqlMap.getIdentifiableStatements()) {
@@ -57,7 +56,7 @@ public class IdentifiableStatementReference extends PsiReferenceBase<PsiLiteralE
 
         List<Object> result = new ArrayList<Object>();
 
-        for (DomFileElement<SqlMap> fileElement : findSqlMapFileElements()) {
+        for (DomFileElement<SqlMap> fileElement : ServiceManager.getService(getElement().getProject(), DomFileElementsFinder.class).findSqlMapFileElements()) {
 
             SqlMap rootElement = fileElement.getRootElement();
             String namespace = rootElement.getNamespace().getRawText();
@@ -73,10 +72,6 @@ public class IdentifiableStatementReference extends PsiReferenceBase<PsiLiteralE
 
         return result.toArray(new Object[result.size()]);
 
-    }
-
-    private List<DomFileElement<SqlMap>> findSqlMapFileElements() {
-        return DomService.getInstance().getFileElements(SqlMap.class, getElement().getProject(), GlobalSearchScope.projectScope(getElement().getProject()));
     }
 
 }

@@ -28,6 +28,9 @@
 
         <psi.referenceContributor implementation="net.ishchenko.idea.minibatis.MyBatisReferenceContributor"/>
         <dom.fileDescription implementation="net.ishchenko.idea.minibatis.SqlMapDescription"/>
+        <dom.fileDescription implementation="net.ishchenko.idea.minibatis.MapperDescription"/>
+        <codeInsight.lineMarkerProvider language="JAVA" implementationClass="net.ishchenko.idea.minibatis.MyBatis3ProxiesLineMarkerProvider"/>
+        <projectService serviceImplementation="net.ishchenko.idea.minibatis.DomFileElementsFinder"/>
 
     </extensions>
 
