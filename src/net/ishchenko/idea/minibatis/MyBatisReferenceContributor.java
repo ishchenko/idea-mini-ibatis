@@ -16,24 +16,11 @@ public class MyBatisReferenceContributor extends PsiReferenceContributor {
     @Override
     public void registerReferenceProviders(PsiReferenceRegistrar registrar) {
 
-        registrar.registerReferenceProvider(PsiJavaPatterns.psiLiteral(), new PsiReferenceProvider() {
-
+        registrar.registerReferenceProvider(PsiJavaPatterns.psiLiteral().withSuperParent(2, PsiMethodCallExpression.class), new PsiReferenceProvider() {
             @NotNull
             public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
-
-                if (!(element instanceof PsiLiteralExpression)) {
-                    return PsiReference.EMPTY_ARRAY;
-                }
-
-                PsiElement parent = element.getParent().getParent();
-                if (parent == null || !(parent instanceof PsiMethodCallExpression)) {
-                    return PsiReference.EMPTY_ARRAY;
-                }
-
                 return new PsiReference[]{new IdentifiableStatementReference((PsiLiteralExpression) element)};
-
             }
-
         });
 
     }
