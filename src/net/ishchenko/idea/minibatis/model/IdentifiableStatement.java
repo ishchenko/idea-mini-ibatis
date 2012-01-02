@@ -1,10 +1,8 @@
 package net.ishchenko.idea.minibatis.model;
 
-import com.intellij.util.xml.Attribute;
-import com.intellij.util.xml.DomElement;
-import com.intellij.util.xml.GenericAttributeValue;
-import com.intellij.util.xml.Required;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.util.xml.*;
+
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,9 +12,11 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface IdentifiableStatement extends DomElement {
 
-    @NotNull
-    @Required
+    @NameValue
     @Attribute("id")
-    public GenericAttributeValue<String> getId();
+    GenericAttributeValue<String> getId();
+
+    @SubTagList("include")
+    List<Include> getIncludes();
 
 }
