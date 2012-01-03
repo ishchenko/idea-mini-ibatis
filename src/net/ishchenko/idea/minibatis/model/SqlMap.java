@@ -22,10 +22,10 @@ public interface SqlMap extends DomElement {
     List<IdentifiableStatement> getSqls();
 
     @SubTagList("statement")
-    List<IdentifiableStatement> getStatements();
+    List<Statement> getStatements();
 
     @SubTagList("select")
-    List<IdentifiableStatement> getSelects();
+    List<Select> getSelects();
 
     @SubTagList("insert")
     List<IdentifiableStatement> getInserts();
@@ -37,6 +37,8 @@ public interface SqlMap extends DomElement {
     List<IdentifiableStatement> getDeletes();
 
     @SubTagList("procedure")
-    List<IdentifiableStatement> getProcedures();
+    List<Procedure> getProcedures();
 
+    @SubTagList("typeAlias")
+    List<TypeAlias> getTypeAliases();
 }
