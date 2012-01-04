@@ -51,7 +51,7 @@ public class MyBatis3ProxiesLineMarkerProvider implements LineMarkerProvider {
                         nameIdentifier.getTextRange(),
                         navigateToDeclarationIcon,
                         Pass.UPDATE_ALL,
-                        getTooltipProviderForMapperReference(processor.getFoundValue()),
+                        getTooltipProvider(processor.getFoundValue()),
                         getNavigationHandler(processor.getFoundValue().getXmlElement()),
                         GutterIconRenderer.Alignment.CENTER
                 );
@@ -67,7 +67,7 @@ public class MyBatis3ProxiesLineMarkerProvider implements LineMarkerProvider {
 
     }
 
-    private Function<PsiIdentifier, String> getTooltipProviderForMapperReference(final DomElement element) {
+    private Function<PsiIdentifier, String> getTooltipProvider(final DomElement element) {
 
         return new NullableFunction<PsiIdentifier, String>() {
             @Override
