@@ -32,6 +32,7 @@
         <dom.fileDescription implementation="net.ishchenko.idea.minibatis.SqlMapDescription"/>
         <dom.fileDescription implementation="net.ishchenko.idea.minibatis.MapperDescription"/>
         <codeInsight.lineMarkerProvider language="JAVA" implementationClass="net.ishchenko.idea.minibatis.MyBatis3ProxiesLineMarkerProvider"/>
+        <definitionsSearch implementation="net.ishchenko.idea.minibatis.MyBatis3ProxiesDefinitionsSearcher"/>
         <projectService serviceImplementation="net.ishchenko.idea.minibatis.DomFileElementsFinder"/>
 
     </extensions>

@@ -8,16 +8,12 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.pom.Navigatable;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiIdentifier;
-import com.intellij.psi.PsiMethod;
+import com.intellij.psi.*;
 import com.intellij.psi.xml.XmlElement;
+import com.intellij.util.CommonProcessors;
 import com.intellij.util.Function;
 import com.intellij.util.NullableFunction;
-import com.intellij.util.xml.DomFileElement;
-import net.ishchenko.idea.minibatis.model.IdentifiableStatement;
-import net.ishchenko.idea.minibatis.model.Mapper;
+import com.intellij.util.xml.DomElement;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -37,14 +33,28 @@ public class MyBatis3ProxiesLineMarkerProvider implements LineMarkerProvider {
     @Override
     public LineMarkerInfo getLineMarkerInfo(PsiElement element) {
 
-        if (element instanceof PsiClass && ((PsiClass)element).isInterface()) {
-            return getLineMarkerForClass((PsiClass) element);
-        }
+        if (element instanceof PsiNameIdentifierOwner) {
 
-        if (element instanceof PsiMethod) {
-            PsiClass clazz = ((PsiMethod) element).getContainingClass();
-            if (clazz != null && clazz.isInterface()) {
-                return getLineMarkerForMethod((PsiMethod) element);
+            DomFileElementsFinder finder = ServiceManager.getService(element.getProject(), DomFileElementsFinder.class);
+            CommonProcessors.FindFirstProcessor<DomElement> processor = new CommonProcessors.FindFirstProcessor<DomElement>();
+
+            if (element instanceof PsiClass) {
+                finder.processMappers((PsiClass) element, processor);
+            } else if (element instanceof PsiMethod) {
+                finder.processMapperStatements((PsiMethod) element, processor);
+            }
+
+            PsiElement nameIdentifier = ((PsiNameIdentifierOwner) element).getNameIdentifier();
+            if (processor.isFound() && nameIdentifier != null) {
+                return new LineMarkerInfo<PsiIdentifier>(
+                        (PsiIdentifier) nameIdentifier, //we just know it, ok
+                        nameIdentifier.getTextRange(),
+                        navigateToDeclarationIcon,
+                        Pass.UPDATE_ALL,
+                        getTooltipProviderForMapperReference(processor.getFoundValue()),
+                        getNavigationHandler(processor.getFoundValue().getXmlElement()),
+                        GutterIconRenderer.Alignment.CENTER
+                );
             }
         }
 
@@ -57,95 +67,20 @@ public class MyBatis3ProxiesLineMarkerProvider implements LineMarkerProvider {
 
     }
 
-    private LineMarkerInfo getLineMarkerForClass(PsiClass clazz) {
-
-        PsiIdentifier nameIdentifier = clazz.getNameIdentifier();
-        String qualifiedName = clazz.getQualifiedName();
-        if (nameIdentifier != null && qualifiedName != null) {
-            for (DomFileElement<Mapper> fileElement : ServiceManager.getService(clazz.getProject(), DomFileElementsFinder.class).findMapperFileElements()) {
-                Mapper mapper = fileElement.getRootElement();
-                if (qualifiedName.equals(mapper.getNamespace().getRawText())) {
-                    return new LineMarkerInfo<PsiIdentifier>(
-                            nameIdentifier,
-                            nameIdentifier.getTextRange(),
-                            navigateToDeclarationIcon,
-                            Pass.UPDATE_ALL,
-                            getTooltipProviderForMapperReference(mapper),
-                            getNavigationHandler(mapper.getXmlElement()),
-                            GutterIconRenderer.Alignment.CENTER
-                    );
-
-                }
-            }
-        }
-
-        return null;
-
-    }
-
-    private LineMarkerInfo getLineMarkerForMethod(PsiMethod method) {
-
-        PsiIdentifier nameIdentifier = method.getNameIdentifier();
-        PsiClass clazz = method.getContainingClass();
-        if (clazz != null && nameIdentifier != null) {
-
-            String qualifiedName = clazz.getQualifiedName();
-            String methodName = method.getName();
-            if (qualifiedName != null) {
-
-                for (DomFileElement<Mapper> fileElement : ServiceManager.getService(method.getProject(), DomFileElementsFinder.class).findMapperFileElements()) {
-                    Mapper mapper = fileElement.getRootElement();
-                    if (qualifiedName.equals(mapper.getNamespace().getRawText())) {
-                        for (IdentifiableStatement statement : mapper.getIdentifiableStatements()) {
-                            if (methodName.equals(statement.getId().getRawText())) {
-                                return new LineMarkerInfo<PsiIdentifier>(
-                                        nameIdentifier,
-                                        nameIdentifier.getTextRange(),
-                                        navigateToDeclarationIcon,
-                                        Pass.UPDATE_ALL,
-                                        getTooltipProviderForStatementReference(statement),
-                                        getNavigationHandler(statement.getXmlElement()),
-                                        GutterIconRenderer.Alignment.CENTER
-                                );
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return null;
-
-    }
-
-    private Function<PsiIdentifier, String> getTooltipProviderForMapperReference(final Mapper mapper) {
+    private Function<PsiIdentifier, String> getTooltipProviderForMapperReference(final DomElement element) {
 
         return new NullableFunction<PsiIdentifier, String>() {
             @Override
             public String fun(PsiIdentifier psiIdentifier) {
-                XmlElement xmlElement = mapper.getXmlElement();
+                XmlElement xmlElement = element.getXmlElement();
                 if (xmlElement != null) {
-                    return mapper.getNamespace().getRawText() + " in " + xmlElement.getContainingFile().getName();
+                    return element.getXmlElementName() + " in " + xmlElement.getContainingFile().getName();
                 } else {
                     return null;
                 }
             }
         };
 
-    }
-
-    private Function<PsiIdentifier, String> getTooltipProviderForStatementReference(final IdentifiableStatement statement) {
-
-        return new NullableFunction<PsiIdentifier, String>() {
-            @Override
-            public String fun(PsiIdentifier psiIdentifier) {
-                XmlElement xmlElement = statement.getXmlElement();
-                if (xmlElement != null) {
-                    return statement.getXmlElementName() + " in " + xmlElement.getContainingFile().getName();
-                } else {
-                    return null;
-                }
-            }
-        };
     }
 
     private GutterIconNavigationHandler<PsiIdentifier> getNavigationHandler(final XmlElement statement) {
