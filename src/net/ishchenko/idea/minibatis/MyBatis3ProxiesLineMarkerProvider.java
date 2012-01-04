@@ -37,11 +37,17 @@ public class MyBatis3ProxiesLineMarkerProvider implements LineMarkerProvider {
     @Override
     public LineMarkerInfo getLineMarkerInfo(PsiElement element) {
 
-        if (element instanceof PsiClass) {
+        if (element instanceof PsiClass && ((PsiClass)element).isInterface()) {
             return getLineMarkerForClass((PsiClass) element);
-        } else if (element instanceof PsiMethod) {
-            return getLineMarkerForMethod((PsiMethod) element);
         }
+
+        if (element instanceof PsiMethod) {
+            PsiClass clazz = ((PsiMethod) element).getContainingClass();
+            if (clazz != null && clazz.isInterface()) {
+                return getLineMarkerForMethod((PsiMethod) element);
+            }
+        }
+
         return null;
 
     }
