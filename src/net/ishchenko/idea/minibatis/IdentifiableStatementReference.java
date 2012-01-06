@@ -2,10 +2,12 @@ package net.ishchenko.idea.minibatis;
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.components.ServiceManager;
+import com.intellij.pom.references.PomService;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiLiteralExpression;
 import com.intellij.psi.PsiReferenceBase;
 import com.intellij.util.xml.DomFileElement;
+import com.intellij.util.xml.DomTarget;
 import net.ishchenko.idea.minibatis.model.IdentifiableStatement;
 import net.ishchenko.idea.minibatis.model.SqlMap;
 import org.jetbrains.annotations.NotNull;
@@ -42,7 +44,8 @@ public class IdentifiableStatementReference extends PsiReferenceBase<PsiLiteralE
             if (namespace.equals(sqlMap.getNamespace().getRawText())) {
                 for (IdentifiableStatement statement : sqlMap.getIdentifiableStatements()) {
                     if (id.equals(statement.getId().getRawText())) {
-                        return statement.getXmlElement();
+                        DomTarget target = DomTarget.getTarget(statement);
+                        return target != null ? PomService.convertToPsi(target) : null;
                     }
                 }
             }
