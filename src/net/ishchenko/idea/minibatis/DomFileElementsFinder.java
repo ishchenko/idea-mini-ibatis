@@ -31,12 +31,40 @@ public class DomFileElementsFinder {
         this.domService = domService;
     }
 
-    public List<DomFileElement<SqlMap>> findSqlMapFileElements() {
-        return domService.getFileElements(SqlMap.class, project, GlobalSearchScope.allScope(project));
+    public void processSqlMapStatements(@NotNull String namespace, @NotNull String id, @NotNull Processor<? super IdentifiableStatement> processor) {
+
+        for (DomFileElement<SqlMap> fileElement : findSqlMapFileElements()) {
+            SqlMap sqlMap = fileElement.getRootElement();
+            if (namespace.equals(sqlMap.getNamespace().getRawText())) {
+                for (IdentifiableStatement statement : sqlMap.getIdentifiableStatements()) {
+                    if (id.equals(statement.getId().getRawText())) {
+                        if (!processor.process(statement)){
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+        
     }
 
-    private List<DomFileElement<Mapper>> findMapperFileElements() {
-        return domService.getFileElements(Mapper.class, project, GlobalSearchScope.allScope(project));
+    public void processSqlMapStatementNames(@NotNull Processor<String> processor) {
+
+        for (DomFileElement<SqlMap> fileElement : findSqlMapFileElements()) {
+            SqlMap rootElement = fileElement.getRootElement();
+            String namespace = rootElement.getNamespace().getRawText();
+            if (namespace != null) {
+                for (IdentifiableStatement statement : rootElement.getIdentifiableStatements()) {
+                    String id = statement.getId().getRawText();
+                    if (id != null) {
+                        if (!processor.process(namespace + "." + id)){
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     public void processMappers(@NotNull PsiClass clazz, @NotNull Processor<? super Mapper> processor) {
@@ -80,4 +108,15 @@ public class DomFileElementsFinder {
         }
 
     }
+
+    private List<DomFileElement<SqlMap>> findSqlMapFileElements() {
+        return domService.getFileElements(SqlMap.class, project, GlobalSearchScope.allScope(project));
+    }
+
+    private List<DomFileElement<Mapper>> findMapperFileElements() {
+        return domService.getFileElements(Mapper.class, project, GlobalSearchScope.allScope(project));
+    }
+
 }
+
+

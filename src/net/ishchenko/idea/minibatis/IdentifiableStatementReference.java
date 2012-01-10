@@ -1,20 +1,15 @@
 package net.ishchenko.idea.minibatis;
 
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.pom.references.PomService;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiLiteralExpression;
 import com.intellij.psi.PsiReferenceBase;
-import com.intellij.util.xml.DomFileElement;
+import com.intellij.util.CommonProcessors;
 import com.intellij.util.xml.DomTarget;
 import net.ishchenko.idea.minibatis.model.IdentifiableStatement;
-import net.ishchenko.idea.minibatis.model.SqlMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -39,41 +34,23 @@ public class IdentifiableStatementReference extends PsiReferenceBase<PsiLiteralE
         String namespace = parts[0];
         String id = parts[1];
 
-        for (DomFileElement<SqlMap> fileElement : ServiceManager.getService(getElement().getProject(), DomFileElementsFinder.class).findSqlMapFileElements()) {
-            SqlMap sqlMap = fileElement.getRootElement();
-            if (namespace.equals(sqlMap.getNamespace().getRawText())) {
-                for (IdentifiableStatement statement : sqlMap.getIdentifiableStatements()) {
-                    if (id.equals(statement.getId().getRawText())) {
-                        DomTarget target = DomTarget.getTarget(statement);
-                        return target != null ? PomService.convertToPsi(target) : null;
-                    }
-                }
-            }
+        CommonProcessors.FindFirstProcessor<IdentifiableStatement> processor = new CommonProcessors.FindFirstProcessor<IdentifiableStatement>();
+        ServiceManager.getService(getElement().getProject(), DomFileElementsFinder.class).processSqlMapStatements(namespace, id, processor);
+        if (processor.isFound()) {
+            DomTarget target = DomTarget.getTarget(processor.getFoundValue());
+            return target != null ? PomService.convertToPsi(target) : null;
+        } else {
+            return null;
         }
 
-        return null;
     }
 
     @NotNull
     public Object[] getVariants() {
 
-        List<Object> result = new ArrayList<Object>();
-
-        for (DomFileElement<SqlMap> fileElement : ServiceManager.getService(getElement().getProject(), DomFileElementsFinder.class).findSqlMapFileElements()) {
-
-            SqlMap rootElement = fileElement.getRootElement();
-            String namespace = rootElement.getNamespace().getRawText();
-            if (namespace != null) {
-                for (IdentifiableStatement statement : rootElement.getIdentifiableStatements()) {
-                    String id = statement.getId().getRawText();
-                    if (id != null) {
-                        result.add(LookupElementBuilder.create(namespace + "." + id));
-                    }
-                }
-            }
-        }
-
-        return result.toArray(new Object[result.size()]);
+        CommonProcessors.CollectProcessor<String> processor = new CommonProcessors.CollectProcessor<String>();
+        ServiceManager.getService(getElement().getProject(), DomFileElementsFinder.class).processSqlMapStatementNames(processor);
+        return processor.toArray(new String[processor.getResults().size()]);
 
     }
 
