@@ -18,7 +18,7 @@
         <ul> 1.2
             <li>include tags support</li>
             <li>typeAlias support</li>
-            <li>MyBatis 3 proxies - Go to Implementation for proxy methods jumps mapper xml</li>
+            <li>MyBatis 3 proxies - Go to Implementation for proxy methods jumps right into xml declaration for the mapper method</li>
             <li>Find Usages for sqlMap statements. Finds self-reference as well, that should be fixed</li>
         </ul>
         <ul> 1.1
