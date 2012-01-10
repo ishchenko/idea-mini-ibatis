@@ -2,7 +2,7 @@
 
     <id>idea-mini-ibatis</id>
     <name>iBATIS/MyBatis mini-plugin</name>
-    <version>1.1</version>
+    <version>1.2</version>
     <vendor>Max Ishchenko</vendor>
     <idea-version since-build="103.255"/>
 
@@ -15,11 +15,17 @@
 
     <change-notes>
         <![CDATA[
+        <ul> 1.2
+            <li>include tags support</li>
+            <li>typeAlias support</li>
+            <li>MyBatis 3 proxies - Go to Implementation for proxy methods jumps mapper xml</li>
+            <li>Find Usages for sqlMap statements. Finds self-reference as well, that should be fixed</li>
+        </ul>
         <ul> 1.1
             <li>Showing clickable gutter icons for mapper interface and their methods, no Go to Implementation hotkey support yet</li>
             <li>Searching for sqlMaps and mappers in libraries as well</li>
         </ul>
-        <ul> Initial version
+        <ul> 1.0
             <li>Go to Declaration for string literals in method arguments</li>
             <li>Autocompletion of statement names in string literals in method arguments</li>
         </ul>
