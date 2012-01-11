@@ -1,15 +1,18 @@
 package net.ishchenko.idea.minibatis;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.pom.references.PomService;
-import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementResolveResult;
 import com.intellij.psi.PsiLiteralExpression;
-import com.intellij.psi.PsiReferenceBase;
+import com.intellij.psi.PsiPolyVariantReferenceBase;
+import com.intellij.psi.ResolveResult;
+import com.intellij.psi.impl.PomTargetPsiElementImpl;
+import com.intellij.psi.xml.XmlElement;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.xml.DomTarget;
 import net.ishchenko.idea.minibatis.model.IdentifiableStatement;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.Collection;
 
 /**
  * Created by IntelliJ IDEA.
@@ -17,31 +20,44 @@ import org.jetbrains.annotations.Nullable;
  * Date: 24.12.11
  * Time: 23:59
  */
-public class IdentifiableStatementReference extends PsiReferenceBase<PsiLiteralExpression> {
+public class IdentifiableStatementReference extends PsiPolyVariantReferenceBase<PsiLiteralExpression> {
 
     public IdentifiableStatementReference(PsiLiteralExpression expression) {
         super(expression);
     }
 
-    @Nullable
-    public PsiElement resolve() {
+    @NotNull
+    @Override
+    public ResolveResult[] multiResolve(boolean b) {
 
         String[] parts = getElement().getText().replace("\"", "").split("\\.");
         if (parts.length != 2) {
-            return null;
+            return ResolveResult.EMPTY_ARRAY;
         }
 
         String namespace = parts[0];
         String id = parts[1];
 
-        CommonProcessors.FindFirstProcessor<IdentifiableStatement> processor = new CommonProcessors.FindFirstProcessor<IdentifiableStatement>();
+        CommonProcessors.CollectUniquesProcessor<IdentifiableStatement> processor = new CommonProcessors.CollectUniquesProcessor<IdentifiableStatement>();
         ServiceManager.getService(getElement().getProject(), DomFileElementsFinder.class).processSqlMapStatements(namespace, id, processor);
-        if (processor.isFound()) {
-            DomTarget target = DomTarget.getTarget(processor.getFoundValue());
-            return target != null ? PomService.convertToPsi(target) : null;
-        } else {
-            return null;
+        Collection<IdentifiableStatement> processorResults = processor.getResults();
+        final ResolveResult[] results = new ResolveResult[processorResults.size()];
+        final IdentifiableStatement[] statements = processor.getResults().toArray(new IdentifiableStatement[processor.getResults().size()]);
+        for (int i = 0; i < statements.length; i++) {
+            IdentifiableStatement statement = statements[i];
+            DomTarget target = DomTarget.getTarget(statement);
+            if (target != null) {
+                XmlElement xmlElement = statement.getXmlElement();
+                final String locationString = xmlElement != null ? xmlElement.getContainingFile().getName() : "";
+                results[i] = new PsiElementResolveResult(new PomTargetPsiElementImpl(target) {
+                    @Override
+                    public String getLocationString() {
+                        return locationString;
+                    }
+                });
+            }
         }
+        return results;
 
     }
 
