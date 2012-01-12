@@ -1,5 +1,6 @@
 package net.ishchenko.idea.minibatis;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiIdentifier;
@@ -25,10 +26,12 @@ public class DomFileElementsFinder {
 
     private final Project project;
     private final DomService domService;
+    private final Application application;
 
-    public DomFileElementsFinder(Project project, DomService domService) {
+    public DomFileElementsFinder(Project project, DomService domService, Application application) {
         this.project = project;
         this.domService = domService;
+        this.application = application;
     }
 
     public void processSqlMapStatements(@NotNull String namespace, @NotNull String id, @NotNull Processor<? super IdentifiableStatement> processor) {
@@ -38,14 +41,14 @@ public class DomFileElementsFinder {
             if (namespace.equals(sqlMap.getNamespace().getRawText())) {
                 for (IdentifiableStatement statement : sqlMap.getIdentifiableStatements()) {
                     if (id.equals(statement.getId().getRawText())) {
-                        if (!processor.process(statement)){
+                        if (!processor.process(statement)) {
                             return;
                         }
                     }
                 }
             }
         }
-        
+
     }
 
     public void processSqlMapStatementNames(@NotNull Processor<String> processor) {
@@ -57,7 +60,7 @@ public class DomFileElementsFinder {
                 for (IdentifiableStatement statement : rootElement.getIdentifiableStatements()) {
                     String id = statement.getId().getRawText();
                     if (id != null) {
-                        if (!processor.process(namespace + "." + id)){
+                        if (!processor.process(namespace + "." + id)) {
                             return;
                         }
                     }
@@ -67,46 +70,63 @@ public class DomFileElementsFinder {
 
     }
 
-    public void processMappers(@NotNull PsiClass clazz, @NotNull Processor<? super Mapper> processor) {
-        if (clazz.isInterface()) {
-            PsiIdentifier nameIdentifier = clazz.getNameIdentifier();
-            String qualifiedName = clazz.getQualifiedName();
-            if (nameIdentifier != null && qualifiedName != null) {
-                for (DomFileElement<Mapper> fileElement : findMapperFileElements()) {
-                    Mapper mapper = fileElement.getRootElement();
-                    if (qualifiedName.equals(mapper.getNamespace().getRawText())) {
-                        if (!processor.process(mapper)) {
+    public void processMappers(@NotNull final PsiClass clazz, @NotNull final Processor<? super Mapper> processor) {
+        application.runReadAction(new Runnable() {
+            @Override
+            public void run() {
+                if (clazz.isInterface()) {
+                    PsiIdentifier nameIdentifier = clazz.getNameIdentifier();
+                    String qualifiedName = clazz.getQualifiedName();
+                    if (nameIdentifier != null && qualifiedName != null) {
+                        processMappers(qualifiedName, processor);
+                    }
+                }
+            }
+        });
+    }
+
+    public void processMapperStatements(@NotNull final PsiMethod method, @NotNull final Processor<? super IdentifiableStatement> processor) {
+
+        application.runReadAction(new Runnable() {
+            @Override
+            public void run() {
+                PsiClass clazz = method.getContainingClass();
+                if (clazz != null && clazz.isInterface()) {
+                    String qualifiedName = clazz.getQualifiedName();
+                    String methodName = method.getName();
+                    if (qualifiedName != null) {
+                        processMapperStatements(qualifiedName, methodName, processor);
+                    }
+                }
+            }
+        });
+
+    }
+
+    private void processMappers(String className, Processor<? super Mapper> processor) {
+        for (DomFileElement<Mapper> fileElement : findMapperFileElements()) {
+            Mapper mapper = fileElement.getRootElement();
+            if (className.equals(mapper.getNamespace().getRawText())) {
+                if (!processor.process(mapper)) {
+                    return;
+                }
+            }
+        }
+    }
+
+    private void processMapperStatements(String className, String methodName, Processor<? super IdentifiableStatement> processor) {
+        for (DomFileElement<Mapper> fileElement : findMapperFileElements()) {
+            Mapper mapper = fileElement.getRootElement();
+            if (className.equals(mapper.getNamespace().getRawText())) {
+                for (IdentifiableStatement statement : mapper.getIdentifiableStatements()) {
+                    if (methodName.equals(statement.getId().getRawText())) {
+                        if (!processor.process(statement)) {
                             return;
                         }
                     }
                 }
             }
         }
-    }
-
-    public void processMapperStatements(@NotNull PsiMethod method, @NotNull Processor<? super IdentifiableStatement> processor) {
-
-        PsiClass clazz = method.getContainingClass();
-        if (clazz != null && clazz.isInterface()) {
-
-            String qualifiedName = clazz.getQualifiedName();
-            String methodName = method.getName();
-            if (qualifiedName != null) {
-                for (DomFileElement<Mapper> fileElement : findMapperFileElements()) {
-                    Mapper mapper = fileElement.getRootElement();
-                    if (qualifiedName.equals(mapper.getNamespace().getRawText())) {
-                        for (IdentifiableStatement statement : mapper.getIdentifiableStatements()) {
-                            if (methodName.equals(statement.getId().getRawText())) {
-                                if (!processor.process(statement)) {
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
     }
 
     private List<DomFileElement<SqlMap>> findSqlMapFileElements() {
