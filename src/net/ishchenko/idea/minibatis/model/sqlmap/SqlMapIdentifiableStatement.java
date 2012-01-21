@@ -1,4 +1,4 @@
-package net.ishchenko.idea.minibatis.model;
+package net.ishchenko.idea.minibatis.model.sqlmap;
 
 import com.intellij.util.xml.*;
 
@@ -10,7 +10,7 @@ import java.util.List;
  * Date: 23.12.11
  * Time: 23:43
  */
-public interface IdentifiableStatement extends DomElement {
+public interface SqlMapIdentifiableStatement extends DomElement {
 
     @NameValue
     @Attribute("id")

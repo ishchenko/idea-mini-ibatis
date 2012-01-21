@@ -9,7 +9,7 @@ import com.intellij.psi.impl.PomTargetPsiElementImpl;
 import com.intellij.psi.xml.XmlElement;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.xml.DomTarget;
-import net.ishchenko.idea.minibatis.model.IdentifiableStatement;
+import net.ishchenko.idea.minibatis.model.sqlmap.SqlMapIdentifiableStatement;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -38,13 +38,13 @@ public class IdentifiableStatementReference extends PsiPolyVariantReferenceBase<
         String namespace = parts[0];
         String id = parts[1];
 
-        CommonProcessors.CollectUniquesProcessor<IdentifiableStatement> processor = new CommonProcessors.CollectUniquesProcessor<IdentifiableStatement>();
+        CommonProcessors.CollectUniquesProcessor<SqlMapIdentifiableStatement> processor = new CommonProcessors.CollectUniquesProcessor<SqlMapIdentifiableStatement>();
         ServiceManager.getService(getElement().getProject(), DomFileElementsFinder.class).processSqlMapStatements(namespace, id, processor);
-        Collection<IdentifiableStatement> processorResults = processor.getResults();
+        Collection<SqlMapIdentifiableStatement> processorResults = processor.getResults();
         final ResolveResult[] results = new ResolveResult[processorResults.size()];
-        final IdentifiableStatement[] statements = processor.getResults().toArray(new IdentifiableStatement[processor.getResults().size()]);
+        final SqlMapIdentifiableStatement[] statements = processor.getResults().toArray(new SqlMapIdentifiableStatement[processor.getResults().size()]);
         for (int i = 0; i < statements.length; i++) {
-            IdentifiableStatement statement = statements[i];
+            SqlMapIdentifiableStatement statement = statements[i];
             DomTarget target = DomTarget.getTarget(statement);
             if (target != null) {
                 XmlElement xmlElement = statement.getXmlElement();

@@ -1,4 +1,4 @@
-package net.ishchenko.idea.minibatis.model;
+package net.ishchenko.idea.minibatis.model.sqlmap;
 
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.DomElement;

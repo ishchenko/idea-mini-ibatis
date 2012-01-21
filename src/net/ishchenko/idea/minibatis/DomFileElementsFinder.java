@@ -9,9 +9,10 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.Processor;
 import com.intellij.util.xml.DomFileElement;
 import com.intellij.util.xml.DomService;
-import net.ishchenko.idea.minibatis.model.IdentifiableStatement;
-import net.ishchenko.idea.minibatis.model.Mapper;
-import net.ishchenko.idea.minibatis.model.SqlMap;
+import net.ishchenko.idea.minibatis.model.mapper.Mapper;
+import net.ishchenko.idea.minibatis.model.mapper.MapperIdentifiableStatement;
+import net.ishchenko.idea.minibatis.model.sqlmap.SqlMap;
+import net.ishchenko.idea.minibatis.model.sqlmap.SqlMapIdentifiableStatement;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -34,12 +35,12 @@ public class DomFileElementsFinder {
         this.application = application;
     }
 
-    public void processSqlMapStatements(@NotNull String namespace, @NotNull String id, @NotNull Processor<? super IdentifiableStatement> processor) {
+    public void processSqlMapStatements(@NotNull String namespace, @NotNull String id, @NotNull Processor<? super SqlMapIdentifiableStatement> processor) {
 
         for (DomFileElement<SqlMap> fileElement : findSqlMapFileElements()) {
             SqlMap sqlMap = fileElement.getRootElement();
             if (namespace.equals(sqlMap.getNamespace().getRawText())) {
-                for (IdentifiableStatement statement : sqlMap.getIdentifiableStatements()) {
+                for (SqlMapIdentifiableStatement statement : sqlMap.getIdentifiableStatements()) {
                     if (id.equals(statement.getId().getRawText())) {
                         if (!processor.process(statement)) {
                             return;
@@ -57,7 +58,7 @@ public class DomFileElementsFinder {
             SqlMap rootElement = fileElement.getRootElement();
             String namespace = rootElement.getNamespace().getRawText();
             if (namespace != null) {
-                for (IdentifiableStatement statement : rootElement.getIdentifiableStatements()) {
+                for (SqlMapIdentifiableStatement statement : rootElement.getIdentifiableStatements()) {
                     String id = statement.getId().getRawText();
                     if (id != null) {
                         if (!processor.process(namespace + "." + id)) {
@@ -85,7 +86,7 @@ public class DomFileElementsFinder {
         });
     }
 
-    public void processMapperStatements(@NotNull final PsiMethod method, @NotNull final Processor<? super IdentifiableStatement> processor) {
+    public void processMapperStatements(@NotNull final PsiMethod method, @NotNull final Processor<? super MapperIdentifiableStatement> processor) {
 
         application.runReadAction(new Runnable() {
             @Override
@@ -114,11 +115,11 @@ public class DomFileElementsFinder {
         }
     }
 
-    private void processMapperStatements(String className, String methodName, Processor<? super IdentifiableStatement> processor) {
+    private void processMapperStatements(String className, String methodName, Processor<? super MapperIdentifiableStatement> processor) {
         for (DomFileElement<Mapper> fileElement : findMapperFileElements()) {
             Mapper mapper = fileElement.getRootElement();
             if (className.equals(mapper.getNamespace().getRawText())) {
-                for (IdentifiableStatement statement : mapper.getIdentifiableStatements()) {
+                for (MapperIdentifiableStatement statement : mapper.getIdentifiableStatements()) {
                     if (methodName.equals(statement.getId().getRawText())) {
                         if (!processor.process(statement)) {
                             return;

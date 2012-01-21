@@ -1,4 +1,4 @@
-package net.ishchenko.idea.minibatis.model;
+package net.ishchenko.idea.minibatis.model.sqlmap;
 
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.DomElement;
@@ -13,6 +13,6 @@ import com.intellij.util.xml.GenericAttributeValue;
 public interface Include extends DomElement {
 
     @Attribute("refid")
-    GenericAttributeValue<IdentifiableStatement> getRefid();
+    GenericAttributeValue<SqlMapIdentifiableStatement> getRefid();
 
 }

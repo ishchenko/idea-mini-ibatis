@@ -1,4 +1,4 @@
-package net.ishchenko.idea.minibatis.model;
+package net.ishchenko.idea.minibatis.model.sqlmap;
 
 import com.intellij.util.xml.*;
 
@@ -16,10 +16,10 @@ public interface SqlMap extends DomElement {
     GenericAttributeValue<String> getNamespace();
 
     @SubTagsList({"sql", "statement", "select", "insert", "update", "delete", "procedure"})
-    List<IdentifiableStatement> getIdentifiableStatements();
+    List<SqlMapIdentifiableStatement> getIdentifiableStatements();
     
     @SubTagList("sql")
-    List<IdentifiableStatement> getSqls();
+    List<SqlMapIdentifiableStatement> getSqls();
 
     @SubTagList("statement")
     List<Statement> getStatements();
@@ -28,13 +28,13 @@ public interface SqlMap extends DomElement {
     List<Select> getSelects();
 
     @SubTagList("insert")
-    List<IdentifiableStatement> getInserts();
+    List<SqlMapIdentifiableStatement> getInserts();
 
     @SubTagList("update")
-    List<IdentifiableStatement> getUpdates();
+    List<SqlMapIdentifiableStatement> getUpdates();
 
     @SubTagList("delete")
-    List<IdentifiableStatement> getDeletes();
+    List<SqlMapIdentifiableStatement> getDeletes();
 
     @SubTagList("procedure")
     List<Procedure> getProcedures();
