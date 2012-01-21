@@ -41,4 +41,8 @@ public interface SqlMap extends DomElement {
 
     @SubTagList("typeAlias")
     List<TypeAlias> getTypeAliases();
+
+    @SubTagList("resultMap")
+    List<ResultMap> getResultMaps();
+
 }

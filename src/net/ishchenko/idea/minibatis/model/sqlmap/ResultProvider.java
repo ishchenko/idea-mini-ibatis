@@ -15,4 +15,7 @@ public interface ResultProvider extends DomElement {
     @Attribute("resultClass")
     GenericAttributeValue<TypeAlias> getResultClass();
 
+    @Attribute("resultMap")
+    GenericAttributeValue<ResultMap> getResultMap();
+
 }
