@@ -13,6 +13,7 @@ import net.ishchenko.idea.minibatis.model.sqlmap.SqlMapIdentifiableStatement;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.regex.Pattern;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,6 +22,8 @@ import java.util.Collection;
  * Time: 23:59
  */
 public class IdentifiableStatementReference extends PsiPolyVariantReferenceBase<PsiLiteralExpression> {
+    
+    private static final Pattern dotPattern = Pattern.compile("\\.");
 
     public IdentifiableStatementReference(PsiLiteralExpression expression) {
         super(expression);
@@ -30,19 +33,26 @@ public class IdentifiableStatementReference extends PsiPolyVariantReferenceBase<
     @Override
     public ResolveResult[] multiResolve(boolean b) {
 
-        String[] parts = getElement().getText().replace("\"", "").split("\\.");
-        if (parts.length != 2) {
-            return ResolveResult.EMPTY_ARRAY;
-        }
+        String rawText = getElement().getText();
+        String[] parts = dotPattern.split(rawText.substring(1, rawText.length() - 1), 2);
 
-        String namespace = parts[0];
-        String id = parts[1];
+        String namespace;
+        String id;
+
+        if (parts.length == 2) {
+            namespace = parts[0];
+            id = parts[1];
+        } else {
+            namespace = "";
+            id = parts[0];
+        }
 
         CommonProcessors.CollectUniquesProcessor<SqlMapIdentifiableStatement> processor = new CommonProcessors.CollectUniquesProcessor<SqlMapIdentifiableStatement>();
         ServiceManager.getService(getElement().getProject(), DomFileElementsFinder.class).processSqlMapStatements(namespace, id, processor);
+
         Collection<SqlMapIdentifiableStatement> processorResults = processor.getResults();
         final ResolveResult[] results = new ResolveResult[processorResults.size()];
-        final SqlMapIdentifiableStatement[] statements = processor.getResults().toArray(new SqlMapIdentifiableStatement[processor.getResults().size()]);
+        final SqlMapIdentifiableStatement[] statements = processorResults.toArray(new SqlMapIdentifiableStatement[processorResults.size()]);
         for (int i = 0; i < statements.length; i++) {
             SqlMapIdentifiableStatement statement = statements[i];
             DomTarget target = DomTarget.getTarget(statement);

@@ -35,16 +35,19 @@ public class DomFileElementsFinder {
         this.application = application;
     }
 
-    public void processSqlMapStatements(@NotNull String namespace, @NotNull String id, @NotNull Processor<? super SqlMapIdentifiableStatement> processor) {
+    public void processSqlMapStatements(@NotNull String targetNamespace, @NotNull String targetId, @NotNull Processor<? super SqlMapIdentifiableStatement> processor) {
 
+        nsloop:
         for (DomFileElement<SqlMap> fileElement : findSqlMapFileElements()) {
             SqlMap sqlMap = fileElement.getRootElement();
-            if (namespace.equals(sqlMap.getNamespace().getRawText())) {
+            String namespace = sqlMap.getNamespace().getRawText();
+            if (targetNamespace.equals(namespace) || targetNamespace.length() == 0 && namespace == null) {
                 for (SqlMapIdentifiableStatement statement : sqlMap.getIdentifiableStatements()) {
-                    if (id.equals(statement.getId().getRawText())) {
+                    if (targetId.equals(statement.getId().getRawText())) {
                         if (!processor.process(statement)) {
                             return;
                         }
+                        continue nsloop;
                     }
                 }
             }
@@ -57,14 +60,10 @@ public class DomFileElementsFinder {
         for (DomFileElement<SqlMap> fileElement : findSqlMapFileElements()) {
             SqlMap rootElement = fileElement.getRootElement();
             String namespace = rootElement.getNamespace().getRawText();
-            if (namespace != null) {
-                for (SqlMapIdentifiableStatement statement : rootElement.getIdentifiableStatements()) {
-                    String id = statement.getId().getRawText();
-                    if (id != null) {
-                        if (!processor.process(namespace + "." + id)) {
-                            return;
-                        }
-                    }
+            for (SqlMapIdentifiableStatement statement : rootElement.getIdentifiableStatements()) {
+                String id = statement.getId().getRawText();
+                if (id != null && (namespace != null  && !processor.process(namespace + "." + id) || namespace == null && !processor.process(id))) {
+                    return;
                 }
             }
         }
