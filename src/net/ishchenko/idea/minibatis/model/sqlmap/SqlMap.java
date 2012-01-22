@@ -28,13 +28,13 @@ public interface SqlMap extends DomElement {
     List<Select> getSelects();
 
     @SubTagList("insert")
-    List<SqlMapIdentifiableStatement> getInserts();
+    List<Insert> getInserts();
 
     @SubTagList("update")
-    List<SqlMapIdentifiableStatement> getUpdates();
+    List<Update> getUpdates();
 
     @SubTagList("delete")
-    List<SqlMapIdentifiableStatement> getDeletes();
+    List<Delete> getDeletes();
 
     @SubTagList("procedure")
     List<Procedure> getProcedures();
