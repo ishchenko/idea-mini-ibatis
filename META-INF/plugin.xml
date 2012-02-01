@@ -48,6 +48,7 @@
         <codeInsight.lineMarkerProvider language="JAVA" implementationClass="net.ishchenko.idea.minibatis.MyBatis3ProxiesLineMarkerProvider"/>
         <definitionsSearch implementation="net.ishchenko.idea.minibatis.MyBatis3ProxiesDefinitionsSearcher"/>
         <projectService serviceImplementation="net.ishchenko.idea.minibatis.DomFileElementsFinder"/>
+        <lang.documentationProvider language="JAVA" implementationClass="net.ishchenko.idea.minibatis.StatementDocumentationProvider"/>
 
     </extensions>
 
