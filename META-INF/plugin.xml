@@ -2,7 +2,7 @@
 
     <id>idea-mini-ibatis</id>
     <name>iBATIS/MyBatis mini-plugin</name>
-    <version>1.4</version>
+    <version>1.5</version>
     <vendor>Max Ishchenko</vendor>
     <idea-version since-build="103.255"/>
 
@@ -15,6 +15,9 @@
 
     <change-notes>
         <![CDATA[
+        <ul> 1.5
+            <li>Quick Documentation for statement names in Java code</li>
+        </ul>
         <ul> 1.4
             <li>Support for sqlMaps with no namespace attribute defined</li>
             <li>Better sqlMap file navigation</li>
