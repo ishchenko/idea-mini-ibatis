@@ -16,7 +16,7 @@
     <change-notes>
         <![CDATA[
         <ul> 1.6
-            <li>Occasional StringIndexOutOfBoundsExceptio fixed</li>
+            <li>Occasional StringIndexOutOfBoundsException fixed</li>
             <li>parameterMap attribute support</li>
             <li>selectKey resultClass attribute support</li>
         </ul>
