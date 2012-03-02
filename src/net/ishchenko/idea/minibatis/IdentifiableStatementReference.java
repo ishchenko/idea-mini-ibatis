@@ -34,6 +34,12 @@ public class IdentifiableStatementReference extends PsiPolyVariantReferenceBase<
     public ResolveResult[] multiResolve(boolean b) {
 
         String rawText = getElement().getText();
+
+        //this might happen eventually
+        if (rawText.length() < 2) {
+            return ResolveResult.EMPTY_ARRAY;
+        }
+
         String[] parts = dotPattern.split(rawText.substring(1, rawText.length() - 1), 2);
 
         String namespace;
