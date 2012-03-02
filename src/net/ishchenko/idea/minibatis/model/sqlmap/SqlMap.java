@@ -45,4 +45,7 @@ public interface SqlMap extends DomElement {
     @SubTagList("resultMap")
     List<ResultMap> getResultMaps();
 
+    @SubTagList("parameterMap")
+    List<ParameterMap> getParameterMap();
+
 }

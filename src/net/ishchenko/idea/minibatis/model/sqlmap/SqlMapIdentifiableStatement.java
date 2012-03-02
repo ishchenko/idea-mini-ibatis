@@ -19,6 +19,9 @@ public interface SqlMapIdentifiableStatement extends DomElement {
     @Attribute("parameterClass")
     GenericAttributeValue<TypeAlias> getParameterClass();
 
+    @Attribute("parameterMap")
+    GenericAttributeValue<ParameterMap> getParameterMap();
+
     @SubTagList("include")
     List<Include> getIncludes();
 
