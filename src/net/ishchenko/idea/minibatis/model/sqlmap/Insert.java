@@ -1,5 +1,9 @@
 package net.ishchenko.idea.minibatis.model.sqlmap;
 
+import com.intellij.util.xml.SubTagList;
+
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Max
@@ -7,4 +11,8 @@ package net.ishchenko.idea.minibatis.model.sqlmap;
  * Time: 0:34
  */
 public interface Insert extends SqlMapIdentifiableStatement {
+
+    @SubTagList("selectKey")
+    List<SelectKey> getSelectKeys();
+
 }
