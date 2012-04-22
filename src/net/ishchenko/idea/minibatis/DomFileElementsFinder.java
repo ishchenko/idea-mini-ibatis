@@ -11,6 +11,7 @@ import com.intellij.util.xml.DomFileElement;
 import com.intellij.util.xml.DomService;
 import net.ishchenko.idea.minibatis.model.mapper.Mapper;
 import net.ishchenko.idea.minibatis.model.mapper.MapperIdentifiableStatement;
+import net.ishchenko.idea.minibatis.model.sqlmap.ResultMap;
 import net.ishchenko.idea.minibatis.model.sqlmap.SqlMap;
 import net.ishchenko.idea.minibatis.model.sqlmap.SqlMapIdentifiableStatement;
 import org.jetbrains.annotations.NotNull;
@@ -62,7 +63,43 @@ public class DomFileElementsFinder {
             String namespace = rootElement.getNamespace().getRawText();
             for (SqlMapIdentifiableStatement statement : rootElement.getIdentifiableStatements()) {
                 String id = statement.getId().getRawText();
-                if (id != null && (namespace != null  && !processor.process(namespace + "." + id) || namespace == null && !processor.process(id))) {
+                if (id != null && (namespace != null && !processor.process(namespace + "." + id) || namespace == null && !processor.process(id))) {
+                    return;
+                }
+            }
+        }
+
+    }
+
+    public void processResultMaps(@NotNull String targetNamespace, @NotNull String targetId, @NotNull Processor<? super ResultMap> processor) {
+
+        nsloop:
+        for (DomFileElement<SqlMap> fileElement : findSqlMapFileElements()) {
+            SqlMap rootElement = fileElement.getRootElement();
+            String namespace = rootElement.getNamespace().getRawText();
+            if (targetNamespace.equals(namespace) || targetNamespace.length() == 0 && namespace == null) {
+                for (ResultMap resultMap : rootElement.getResultMaps()) {
+                    if (targetId.equals(resultMap.getId().getRawText())) {
+                        if (!processor.process(resultMap)) {
+                            return;
+                        }
+                        continue nsloop;
+                    }
+                }
+            }
+
+        }
+
+    }
+
+    public void processResultMapNames(@NotNull Processor<String> processor) {
+
+        for (DomFileElement<SqlMap> fileElement : findSqlMapFileElements()) {
+            SqlMap rootElement = fileElement.getRootElement();
+            String namespace = rootElement.getNamespace().getRawText();
+            for (ResultMap resultMap : rootElement.getResultMaps()) {
+                String id = resultMap.getId().getRawText();
+                if (id != null && (namespace != null && !processor.process(namespace + "." + id) || namespace == null && !processor.process(id))) {
                     return;
                 }
             }
