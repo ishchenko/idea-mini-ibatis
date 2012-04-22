@@ -2,7 +2,7 @@
 
     <id>idea-mini-ibatis</id>
     <name>iBATIS/MyBatis mini-plugin</name>
-    <version>1.6</version>
+    <version>1.7</version>
     <vendor>Max Ishchenko</vendor>
     <idea-version since-build="103.255"/>
 
@@ -15,6 +15,9 @@
 
     <change-notes>
         <![CDATA[
+        <ul> 1.7
+            <li>result resultMap attribute support</li>
+        </ul>
         <ul> 1.6
             <li>Occasional StringIndexOutOfBoundsException fixed</li>
             <li>parameterMap attribute support</li>
