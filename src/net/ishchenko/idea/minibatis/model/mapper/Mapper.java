@@ -18,21 +18,24 @@ public interface Mapper extends DomElement {
 
     @SubTagsList({"sql", "select", "insert", "update", "delete"})
     List<MapperIdentifiableStatement> getIdentifiableStatements();
+
+    @SubTagList("resultMap")
+    List<ResultMap> getResultMaps();
     
     @SubTagList("sql")
     List<MapperIdentifiableStatement> getSqls();
 
     @SubTagList("select")
-    List<MapperIdentifiableStatement> getSelects();
+    List<Select> getSelects();
 
     @SubTagList("insert")
-    List<MapperIdentifiableStatement> getInserts();
+    List<Insert> getInserts();
 
     @SubTagList("update")
-    List<MapperIdentifiableStatement> getUpdates();
+    List<Update> getUpdates();
 
     @SubTagList("delete")
-    List<MapperIdentifiableStatement> getDeletes();
+    List<Delete> getDeletes();
 
 
 }

@@ -6,15 +6,18 @@ import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.NameValue;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Max
- * Date: 23.12.11
- * Time: 23:43
+ * Created with IntelliJ IDEA.
+ * User: mishchenko
+ * Date: 26.05.12
+ * Time: 16:21
  */
-public interface MapperIdentifiableStatement extends DomElement, WithIncludes {
+public interface ResultMap extends DomElement {
 
     @NameValue
     @Attribute("id")
     GenericAttributeValue<String> getId();
+
+    @Attribute("extends")
+    GenericAttributeValue<ResultMap> getExtends();
 
 }
