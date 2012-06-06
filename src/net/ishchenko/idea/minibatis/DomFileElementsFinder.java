@@ -6,7 +6,9 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.util.CommonProcessors;
 import com.intellij.util.Processor;
+import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.DomFileElement;
 import com.intellij.util.xml.DomService;
 import net.ishchenko.idea.minibatis.model.mapper.Mapper;
@@ -138,6 +140,12 @@ public class DomFileElementsFinder {
             }
         });
 
+    }
+
+    public boolean existsMapperStatement(PsiMethod method) {
+        CommonProcessors.FindFirstProcessor<DomElement> processor = new CommonProcessors.FindFirstProcessor<DomElement>();
+        processMapperStatements(method, processor);
+        return processor.isFound();
     }
 
     private void processMappers(String className, Processor<? super Mapper> processor) {

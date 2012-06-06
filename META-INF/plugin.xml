@@ -2,7 +2,7 @@
 
     <id>idea-mini-ibatis</id>
     <name>iBATIS/MyBatis mini-plugin</name>
-    <version>1.7</version>
+    <version>1.8</version>
     <vendor>Max Ishchenko</vendor>
     <idea-version since-build="103.255"/>
 
@@ -15,6 +15,10 @@
 
     <change-notes>
         <![CDATA[
+        <ul> 1.8
+            <li>Better mapper file navigation</li>
+            <li>Mapper method definition inspection</li>
+        </ul>
         <ul> 1.7
             <li>result resultMap attribute support</li>
         </ul>
@@ -60,6 +64,7 @@
         <definitionsSearch implementation="net.ishchenko.idea.minibatis.MyBatis3ProxiesDefinitionsSearcher"/>
         <projectService serviceImplementation="net.ishchenko.idea.minibatis.DomFileElementsFinder"/>
         <lang.documentationProvider language="JAVA" implementationClass="net.ishchenko.idea.minibatis.StatementDocumentationProvider"/>
+        <inspectionToolProvider implementation="net.ishchenko.idea.minibatis.MyBatisInspectionToolsProvider"/>
 
     </extensions>
 
