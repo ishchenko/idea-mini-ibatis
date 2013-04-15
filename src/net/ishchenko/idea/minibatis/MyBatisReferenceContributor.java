@@ -16,7 +16,7 @@ public class MyBatisReferenceContributor extends PsiReferenceContributor {
     @Override
     public void registerReferenceProviders(PsiReferenceRegistrar registrar) {
 
-        registrar.registerReferenceProvider(PsiJavaPatterns.psiLiteral().withSuperParent(2, PsiMethodCallExpression.class), new PsiReferenceProvider() {
+        registrar.registerReferenceProvider(PsiJavaPatterns.psiLiteral(), new PsiReferenceProvider() {
             @NotNull
             public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
                 return new PsiReference[]{new IdentifiableStatementReference((PsiLiteralExpression) element)};
