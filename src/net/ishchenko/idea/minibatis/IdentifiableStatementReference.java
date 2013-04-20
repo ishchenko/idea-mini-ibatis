@@ -45,7 +45,7 @@ public class IdentifiableStatementReference extends PsiPolyVariantReferenceBase<
         String[] parts = dotPattern.split(rawText.substring(1, rawText.length() - 1));
 
         if (parts.length == 1) {
-            return findResults("", parts[0]).toArray(new ResolveResult[0]);
+            return findResults("", parts[0]).toArray(ResolveResult.EMPTY_ARRAY);
         } else {
             List<ResolveResult> results = new ArrayList<ResolveResult>();
             for (int i = 0; i < parts.length - 1; i++) {
