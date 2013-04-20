@@ -73,6 +73,30 @@ public class DomFileElementsFinder {
 
     }
 
+    public void processSqlMaps(@NotNull String targetNamespace, @NotNull Processor<? super SqlMap> processor) {
+
+        for (DomFileElement<SqlMap> fileElement : findSqlMapFileElements()) {
+            SqlMap sqlMap = fileElement.getRootElement();
+            String namespace = sqlMap.getNamespace().getRawText();
+            if (targetNamespace.equals(namespace)) {
+                if (!processor.process(sqlMap)) {
+                    return;
+                }
+            }
+        }
+
+    }
+
+    public void processSqlMapNamespaceNames(CommonProcessors.CollectProcessor<String> processor) {
+
+        for (DomFileElement<SqlMap> fileElement : findSqlMapFileElements()) {
+            SqlMap sqlMap = fileElement.getRootElement();
+            if (!processor.process(sqlMap.getNamespace().getRawText())) {
+                return;
+            }
+        }
+    }
+
     public void processResultMaps(@NotNull String targetNamespace, @NotNull String targetId, @NotNull Processor<? super ResultMap> processor) {
 
         nsloop:
@@ -181,7 +205,6 @@ public class DomFileElementsFinder {
     private List<DomFileElement<Mapper>> findMapperFileElements() {
         return domService.getFileElements(Mapper.class, project, GlobalSearchScope.allScope(project));
     }
-
 }
 
 

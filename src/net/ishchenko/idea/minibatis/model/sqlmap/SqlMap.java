@@ -12,6 +12,7 @@ import java.util.List;
  */
 public interface SqlMap extends DomElement {
 
+    @NameValue
     @Attribute("namespace")
     GenericAttributeValue<String> getNamespace();
 
