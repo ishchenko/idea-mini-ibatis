@@ -40,8 +40,13 @@ public class SqlMapReference extends PsiPolyVariantReferenceBase<PsiLiteralExpre
         }
 
         CommonProcessors.CollectUniquesProcessor<SqlMap> processor = new CommonProcessors.CollectUniquesProcessor<SqlMap>();
+        DomFileElementsFinder elementsFinder = ServiceManager.getService(getElement().getProject(), DomFileElementsFinder.class);
+
         String noQuotesText = rawText.substring(1, rawText.length() - 1);
-        ServiceManager.getService(getElement().getProject(), DomFileElementsFinder.class).processSqlMaps(noQuotesText, processor);
+        elementsFinder.processSqlMaps(noQuotesText, processor);
+        if (noQuotesText.length() > 0 && noQuotesText.endsWith(".")) {
+            elementsFinder.processSqlMaps(noQuotesText.substring(0, noQuotesText.length() - 1), processor);
+        }
 
         Collection<SqlMap> processorResults = processor.getResults();
         final List<ResolveResult> results = new ArrayList<ResolveResult>(processorResults.size());
