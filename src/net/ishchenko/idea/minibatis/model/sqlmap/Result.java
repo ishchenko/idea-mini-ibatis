@@ -14,6 +14,10 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface Result extends DomElement {
 
+    @NameValue
+    @Attribute("property")
+    GenericAttributeValue<String> getProperty();
+
     @Attribute("resultMap")
     @Referencing(ResultMapReferenceConverter.class)
     GenericAttributeValue<ResultMap> getResultMap();
