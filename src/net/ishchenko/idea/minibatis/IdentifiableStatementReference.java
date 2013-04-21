@@ -1,11 +1,10 @@
 package net.ishchenko.idea.minibatis;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.psi.PsiElementResolveResult;
-import com.intellij.psi.PsiLiteralExpression;
-import com.intellij.psi.PsiPolyVariantReferenceBase;
-import com.intellij.psi.ResolveResult;
+import com.intellij.psi.*;
+import com.intellij.psi.impl.JavaConstantExpressionEvaluator;
 import com.intellij.psi.impl.PomTargetPsiElementImpl;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlElement;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.xml.DomTarget;
@@ -35,14 +34,12 @@ public class IdentifiableStatementReference extends PsiPolyVariantReferenceBase<
     @Override
     public ResolveResult[] multiResolve(boolean b) {
 
-        String rawText = getElement().getText();
-
-        //this might happen eventually
-        if (rawText.length() < 2) {
+        String value = tryComputeConcatenatedValue();
+        if (value.length() == 0) {
             return ResolveResult.EMPTY_ARRAY;
         }
 
-        String[] parts = dotPattern.split(rawText.substring(1, rawText.length() - 1));
+        String[] parts = dotPattern.split(value);
 
         if (parts.length == 1) {
             return findResults("", parts[0]).toArray(ResolveResult.EMPTY_ARRAY);
@@ -62,6 +59,44 @@ public class IdentifiableStatementReference extends PsiPolyVariantReferenceBase<
         CommonProcessors.CollectProcessor<String> processor = new CommonProcessors.CollectProcessor<String>();
         ServiceManager.getService(getElement().getProject(), DomFileElementsFinder.class).processSqlMapStatementNames(processor);
         return processor.toArray(new String[processor.getResults().size()]);
+
+    }
+
+    private String tryComputeConcatenatedValue() {
+
+        PsiPolyadicExpression parentExpression = PsiTreeUtil.getParentOfType(getElement(), PsiPolyadicExpression.class);
+
+        if (parentExpression != null) {
+            StringBuilder computedValue = new StringBuilder();
+            for (PsiExpression operand : parentExpression.getOperands()) {
+                if (operand instanceof PsiReference) {
+                    PsiElement probableDefinition = ((PsiReference) operand).resolve();
+                    if (probableDefinition instanceof PsiVariable) {
+                        PsiExpression initializer = ((PsiVariable) probableDefinition).getInitializer();
+                        if (initializer != null) {
+                            Object value = JavaConstantExpressionEvaluator.computeConstantExpression(initializer, true);
+                            if (value instanceof String) {
+                                computedValue.append(value);
+                            }
+                        }
+                    }
+                } else {
+                    Object value = JavaConstantExpressionEvaluator.computeConstantExpression(operand, true);
+                    if (value instanceof String) {
+                        computedValue.append(value);
+                    }
+                }
+            }
+            return computedValue.toString();
+        } else {
+            String rawText = getElement().getText();
+            //with quotes, i.e. at least "x" count
+            if (rawText.length() < 3) {
+                return "";
+            }
+            //clean up quotes
+            return rawText.substring(1, rawText.length() - 1);
+        }
 
     }
 
