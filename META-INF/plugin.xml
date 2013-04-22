@@ -17,6 +17,9 @@
         <![CDATA[
         <ul> 1.9
             <li>Multiple dots in fully qualified statement name support</li>
+            <li>Any string literal is a reference now</li>
+            <li>Computing concatenations for literals</li>
+            <li>Better File Structure popup presentation</li>
         </ul>
         <ul> 1.8
             <li>Better mapper file navigation</li>
