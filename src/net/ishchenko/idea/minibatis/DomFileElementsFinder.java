@@ -44,7 +44,7 @@ public class DomFileElementsFinder {
         for (DomFileElement<SqlMap> fileElement : findSqlMapFileElements()) {
             SqlMap sqlMap = fileElement.getRootElement();
             String namespace = sqlMap.getNamespace().getRawText();
-            if (targetNamespace.equals(namespace) || targetNamespace.length() == 0 && namespace == null) {
+            if (targetNamespace.equals(namespace) || targetNamespace.length() == 0) {
                 for (SqlMapIdentifiableStatement statement : sqlMap.getIdentifiableStatements()) {
                     if (targetId.equals(statement.getId().getRawText())) {
                         if (!processor.process(statement)) {
