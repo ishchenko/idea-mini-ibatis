@@ -2,7 +2,7 @@
 
     <id>idea-mini-ibatis</id>
     <name>iBATIS/MyBatis mini-plugin</name>
-    <version>1.9</version>
+    <version>1.10</version>
     <vendor>Max Ishchenko</vendor>
     <idea-version since-build="103.255"/>
 
@@ -15,6 +15,10 @@
 
     <change-notes>
         <![CDATA[
+        <ul> 1.10
+            <li>Not fully qualified statement names support</li>
+            <li>Red circle of death fixed when you had some empty namespaces and invoked auto completion</li>
+        </ul>
         <ul> 1.9
             <li>Multiple dots in fully qualified statement name support</li>
             <li>Any string literal is a reference now</li>
