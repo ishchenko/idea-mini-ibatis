@@ -91,7 +91,7 @@ public class DomFileElementsFinder {
 
         for (DomFileElement<SqlMap> fileElement : findSqlMapFileElements()) {
             SqlMap sqlMap = fileElement.getRootElement();
-            if (!processor.process(sqlMap.getNamespace().getRawText())) {
+            if (sqlMap.getNamespace().getRawText() != null && !processor.process(sqlMap.getNamespace().getRawText())) {
                 return;
             }
         }
