@@ -8,9 +8,14 @@ feature requests: https://github.com/ishchenko/idea-mini-ibatis/issues
 
 # Features
 
-* Supports multiple sqlmap configurations per module. In fact it does not even bother with configurations (yet), only sqlmap files matter.
-* "Go to Declaration" for literal expressions inside any method parameters, e.g. inside spring's SqlMapClientOperations#queryForObject parameters etc.
-* "Find Usages" for statements
-* Autocompletion inside any literal expressions
-* MyBatis 3 proxy methods - "Go to Implementaion" jumps right into xml
-* Some basic sqlMap file navigation
+* iBATIS: Supports multiple sqlMap configurations per module. In fact it does not even bother with configurations (yet), only sqlMap files matter.
+* iBATIS: "Go to Declaration" for literal expressions, e.g. inside spring's `SqlMapClientOperations#queryForObject` parameters etc.
+* iBATIS: "Find Usages" for sqlMap statements
+* iBATIS: Copy Reference (Ctrl+Alt+Shift+C) copies qualified statement name to clipboard
+* iBATIS: Statement id completion inside any literal expressions
+* iBATIS: Some basic sqlMap file navigation
+* iBATIS: Quick Documentation (Ctrl+Q) on statement id in java code shows statement sql
+* iBATIS: Concatenated literals supported as statement references 
+* MyBatis: Proxy interfaces support, "Go to Implementaion" jumps right into mapper xml
+* MyBatis: Proxy interface methods inspection, methods that have no mapper implementation marked as error
+* MyBatis: Some basic mapper file navigation
