@@ -2,7 +2,7 @@ package net.ishchenko.idea.minibatis;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.psi.PsiElementResolveResult;
-import com.intellij.psi.PsiLiteralExpression;
+import com.intellij.psi.PsiLiteral;
 import com.intellij.psi.PsiPolyVariantReferenceBase;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.impl.PomTargetPsiElementImpl;
@@ -22,9 +22,9 @@ import java.util.List;
  * Date: 20.04.13
  * Time: 22:01
  */
-public class SqlMapReference extends PsiPolyVariantReferenceBase<PsiLiteralExpression> {
+public class SqlMapReference extends PsiPolyVariantReferenceBase<PsiLiteral> {
 
-    public SqlMapReference(PsiLiteralExpression expression) {
+    public SqlMapReference(PsiLiteral expression) {
         super(expression);
     }
 

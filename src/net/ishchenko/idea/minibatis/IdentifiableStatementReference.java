@@ -22,11 +22,11 @@ import java.util.regex.Pattern;
  * Date: 24.12.11
  * Time: 23:59
  */
-public class IdentifiableStatementReference extends PsiPolyVariantReferenceBase<PsiLiteralExpression> {
+public class IdentifiableStatementReference extends PsiPolyVariantReferenceBase<PsiLiteral> {
 
     private static final Pattern dotPattern = Pattern.compile("\\.");
 
-    public IdentifiableStatementReference(PsiLiteralExpression expression) {
+    public IdentifiableStatementReference(PsiLiteral expression) {
         super(expression);
     }
 

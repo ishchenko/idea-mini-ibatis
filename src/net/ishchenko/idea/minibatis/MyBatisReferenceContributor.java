@@ -19,7 +19,7 @@ public class MyBatisReferenceContributor extends PsiReferenceContributor {
         registrar.registerReferenceProvider(PsiJavaPatterns.psiLiteral(), new PsiReferenceProvider() {
             @NotNull
             public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
-                return new PsiReference[]{new IdentifiableStatementReference((PsiLiteralExpression) element), new SqlMapReference((PsiLiteralExpression) element)};
+                return new PsiReference[]{new IdentifiableStatementReference((PsiLiteral) element), new SqlMapReference((PsiLiteral) element)};
             }
         });
 
