@@ -80,7 +80,7 @@
         <lang.documentationProvider language="JAVA" implementationClass="net.ishchenko.idea.minibatis.StatementDocumentationProvider"/>
         <inspectionToolProvider implementation="net.ishchenko.idea.minibatis.MyBatisInspectionToolsProvider"/>
         <qualifiedNameProvider implementation="net.ishchenko.idea.minibatis.IdentifiableStatementQualifiedNameProvider"/>
-
+        <callHierarchyProvider language="XML" implementationClass="net.ishchenko.idea.minibatis.IdentifiableStatementHierarchyProvider"/>
     </extensions>
 
 </idea-plugin>
