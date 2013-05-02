@@ -18,7 +18,6 @@ public interface Result extends DomElement {
     @Attribute("property")
     GenericAttributeValue<String> getProperty();
 
-    @NameValue
     @Attribute("typeHandler")
     GenericAttributeValue<TypeAlias> getTypeHandler();
 
