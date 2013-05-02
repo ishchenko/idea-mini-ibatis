@@ -16,7 +16,7 @@
     <change-notes>
         <![CDATA[
         <ul> 1.12
-
+            <li>Call Hierarchy support for sqlMap statements</li>
         </ul>
         <ul> 1.11
             <li>Fixed ClassCastException for groovy strings</li>
