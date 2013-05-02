@@ -18,6 +18,10 @@ public interface Result extends DomElement {
     @Attribute("property")
     GenericAttributeValue<String> getProperty();
 
+    @NameValue
+    @Attribute("typeHandler")
+    GenericAttributeValue<TypeAlias> getTypeHandler();
+
     @Attribute("resultMap")
     @Referencing(ResultMapReferenceConverter.class)
     GenericAttributeValue<ResultMap> getResultMap();
