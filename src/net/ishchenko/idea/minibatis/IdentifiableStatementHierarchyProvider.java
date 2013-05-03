@@ -42,6 +42,9 @@ public class IdentifiableStatementHierarchyProvider implements HierarchyProvider
         final Project project = PlatformDataKeys.PROJECT.getData(dataContext);
         if (project == null) return null;
 
+        Editor editor = LangDataKeys.EDITOR.getData(dataContext);
+        assert editor != null;
+
         PsiElement psiElement = LangDataKeys.PSI_ELEMENT.getData(dataContext);
         if (!isIdentifiableStatement(psiElement)) {
             return null;
@@ -50,10 +53,14 @@ public class IdentifiableStatementHierarchyProvider implements HierarchyProvider
         Collection<PsiReference> refs = ReferencesSearch.search(psiElement).findAll();
         if (refs.size() == 1) {
             PsiElement element = refs.iterator().next().getElement();
-            return PsiTreeUtil.getParentOfType(element, PsiMethod.class, true);
+            PsiMethod parentMethod = PsiTreeUtil.getParentOfType(element, PsiMethod.class, true);
+            if (parentMethod == null) {
+                HintManager.getInstance().showErrorHint(editor, "No direct usages in methods found, no hierarchy can be built");
+                return null;
+            } else {
+                return parentMethod;
+            }
         } else {
-            Editor editor = LangDataKeys.EDITOR.getData(dataContext);
-            assert editor != null;
             HintManager.getInstance().showErrorHint(editor, "Multiple usages found, no hierarchy can be built");
             return null;
         }
