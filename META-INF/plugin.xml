@@ -2,7 +2,7 @@
 
     <id>idea-mini-ibatis</id>
     <name>iBATIS/MyBatis mini-plugin</name>
-    <version>1.12-SNAPSHOT</version>
+    <version>1.12</version>
     <vendor>Max Ishchenko</vendor>
     <idea-version since-build="103.255"/>
 
