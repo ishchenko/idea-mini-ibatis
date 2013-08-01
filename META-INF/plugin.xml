@@ -2,7 +2,7 @@
 
     <id>idea-mini-ibatis</id>
     <name>iBATIS/MyBatis mini-plugin</name>
-    <version>1.12</version>
+    <version>1.13</version>
     <vendor>Max Ishchenko</vendor>
     <idea-version since-build="103.255"/>
 
@@ -15,6 +15,9 @@
 
     <change-notes>
         <![CDATA[
+        <ul> 1.13
+            <li>Find Usages of Spring beans exception fixed</li>
+        </ul>
         <ul> 1.12
             <li>Call Hierarchy support for sqlMap statements</li>
         </ul>
