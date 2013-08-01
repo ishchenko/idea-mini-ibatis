@@ -43,7 +43,7 @@ public class IdentifiableStatementHierarchyProvider implements HierarchyProvider
         if (project == null) return null;
 
         Editor editor = LangDataKeys.EDITOR.getData(dataContext);
-        assert editor != null;
+        if (editor == null) return null;
 
         PsiElement psiElement = LangDataKeys.PSI_ELEMENT.getData(dataContext);
         if (!isIdentifiableStatement(psiElement)) {
