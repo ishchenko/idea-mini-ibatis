@@ -3,11 +3,9 @@ package net.ishchenko.idea.minibatis;
 import com.intellij.ide.actions.QualifiedNameProvider;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
-import com.intellij.pom.PomTarget;
-import com.intellij.pom.PomTargetPsiElement;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.xml.DomElement;
-import com.intellij.util.xml.DomTarget;
+import com.intellij.util.xml.DomUtil;
 import net.ishchenko.idea.minibatis.model.sqlmap.SqlMap;
 import net.ishchenko.idea.minibatis.model.sqlmap.SqlMapIdentifiableStatement;
 import org.jetbrains.annotations.Nullable;
@@ -23,18 +21,19 @@ public class IdentifiableStatementQualifiedNameProvider implements QualifiedName
     @Nullable
     @Override
     public PsiElement adjustElementToCopy(PsiElement element) {
-        if (resolveIdentifiableStatement(element) != null) {
-            return element;
-        } else {
-            return null;
+        DomElement domElement = DomUtil.getDomElement(element);
+        if (domElement != null && "id".equals(domElement.getXmlElementName()) && domElement.getParent() instanceof SqlMapIdentifiableStatement) {
+            return domElement.getParent().getXmlElement();
         }
+        return null;
     }
 
     @Nullable
     @Override
     public String getQualifiedName(PsiElement element) {
-        SqlMapIdentifiableStatement statement = resolveIdentifiableStatement(element);
-        if (statement != null) {
+        DomElement domElement = DomUtil.getDomElement(element);
+        if (domElement instanceof SqlMapIdentifiableStatement) {
+            SqlMapIdentifiableStatement statement = (SqlMapIdentifiableStatement) domElement;
             SqlMap sqlMap = statement.getParentOfType(SqlMap.class, true);
             if (sqlMap != null) {
                 String namespace = sqlMap.getNamespace().getRawText();
@@ -52,19 +51,6 @@ public class IdentifiableStatementQualifiedNameProvider implements QualifiedName
     @Override
     public void insertQualifiedName(String fqn, PsiElement element, Editor editor, Project project) {
 
-    }
-
-    private SqlMapIdentifiableStatement resolveIdentifiableStatement(PsiElement element) {
-        if (element instanceof PomTargetPsiElement) {
-            PomTarget target = ((PomTargetPsiElement) element).getTarget();
-            if (target instanceof DomTarget) {
-                DomElement domElement = ((DomTarget) target).getDomElement();
-                if (domElement instanceof SqlMapIdentifiableStatement) {
-                    return (SqlMapIdentifiableStatement) domElement;
-                }
-            }
-        }
-        return null;
     }
 
 }
