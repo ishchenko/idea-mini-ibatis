@@ -91,6 +91,7 @@
         <inspectionToolProvider implementation="net.ishchenko.idea.minibatis.MyBatisInspectionToolsProvider"/>
         <qualifiedNameProvider implementation="net.ishchenko.idea.minibatis.IdentifiableStatementQualifiedNameProvider"/>
         <callHierarchyProvider language="XML" implementationClass="net.ishchenko.idea.minibatis.IdentifiableStatementHierarchyProvider"/>
+        <gotoSymbolContributor implementation="net.ishchenko.idea.minibatis.GoToSqlMapStatementContributor"/>
     </extensions>
 
 </idea-plugin>
